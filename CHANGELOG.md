@@ -1,3 +1,7 @@
+## 1.0.3
+
+- Update README.md with better example 🚀
+
 ## 1.0.2
 
 - Minor bugfix for caching
