@@ -1,10 +1,11 @@
 library remote_fonts;
 
-import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:crypto/crypto.dart';
+
+import 'io_web_mock.dart' if (dart.library.io) 'io_mobile_desktop.dart';
 
 class RemoteFontAsset {
   final String url;
@@ -14,17 +15,6 @@ class RemoteFontAsset {
 
   Uri get _uri => Uri.parse(url);
 
-  Future<Uint8List?> _localBytes(File file) async {
-    if (!await file.exists()) {
-      return null;
-    }
-    final fontBytes = await file.readAsBytes();
-    if (sha256sum != sha256.convert(fontBytes).toString()) {
-      return null;
-    }
-    return fontBytes;
-  }
-
   Future<Uint8List> get _remoteBytes async {
     final httpClient = http.Client();
     final bytes = (await httpClient.get(_uri)).bodyBytes;
@@ -32,28 +22,20 @@ class RemoteFontAsset {
     return bytes;
   }
 
-  Future<void> _cacheFont(File file, Uint8List bytes) async {
-    if (await file.exists()) {
-      await file.delete();
-    }
-    await file.create(recursive: true);
-    await file.writeAsBytes(bytes);
-  }
-
-  Future<ByteData> getFont([Directory? cacheDir]) async {
-    assert((cacheDir == null && sha256sum == null) ||
-        (cacheDir != null && sha256sum != null));
-    File? localFile;
-    if (cacheDir != null) {
-      localFile = File('${cacheDir.path}/$sha256sum');
-      final localBytes = await _localBytes(localFile);
+  Future<ByteData> getFont([FutureOr<String>? cacheDirPath]) async {
+    assert((cacheDirPath == null && sha256sum == null) ||
+        (cacheDirPath != null && sha256sum != null));
+    FileCompat? localFile;
+    if (cacheDirPath != null) {
+      localFile = FileCompat('${(await cacheDirPath)}/$sha256sum');
+      final localBytes = await localFile.verifiedBytes();
       if (localBytes != null) {
         return ByteData.view(localBytes.buffer);
       }
     }
     final remoteBytes = await _remoteBytes;
     if (localFile != null) {
-      await _cacheFont(localFile, remoteBytes);
+      await localFile.cacheFile(remoteBytes);
     }
     return ByteData.view(remoteBytes.buffer);
   }
@@ -62,13 +44,13 @@ class RemoteFontAsset {
 class RemoteFont {
   final String family;
   final Iterable<RemoteFontAsset> assets;
-  final Directory? cacheDir;
+  final FutureOr<String>? cacheDirPath;
   bool _loaded = false;
 
-  RemoteFont({required this.family, required this.assets, this.cacheDir});
+  RemoteFont({required this.family, required this.assets, this.cacheDirPath});
 
   Iterable<Future<ByteData>> loadableFonts() {
-    return assets.map((asset) => asset.getFont(cacheDir));
+    return assets.map((asset) => asset.getFont(cacheDirPath));
   }
 
   Future<void> load() async {
@@ -87,9 +69,9 @@ class RemoteFont {
 
 class RemoteFonts {
   final Iterable<RemoteFont> fonts;
-  final Directory? cacheDir;
+  final FutureOr<String>? cacheDirPath;
 
-  const RemoteFonts({required this.fonts, this.cacheDir});
+  const RemoteFonts({required this.fonts, this.cacheDirPath});
 
   Future<void> load() async {
     for (final font in fonts) {

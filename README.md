@@ -18,7 +18,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:hide_in_cloud/helpers.dart';
 
-RemoteFont _notoSans(Directory cacheDir) =>
+RemoteFont _notoSans(String cacheDir) =>
     RemoteFont(family: 'NotoSans', cacheDir: cacheDir, assets: [
       const RemoteFontAsset(
         'https://example.com/NotoSans/NotoSans-Thin.ttf',
@@ -58,7 +58,7 @@ RemoteFont _notoSans(Directory cacheDir) =>
       ),
     ]);
 
-RemoteFont _notoSansKR(Directory cacheDir) =>
+RemoteFont _notoSansKR(String cacheDir) =>
     RemoteFont(family: 'NotoSansKR', cacheDir: cacheDir, assets: [
       const RemoteFontAsset(
         'https://example.com/NotoSansKR/NotoSansKR-Thin.otf',
@@ -87,7 +87,7 @@ RemoteFont _notoSansKR(Directory cacheDir) =>
     ]);
 
 String _getFont(String languageCode, String? scriptCode, Directory tempDir) {
-  Directory fontCacheDir = Directory(path.join(tempDir.path, 'font_cache'));
+  String fontCacheDir = path.join(tempDir.path, 'font_cache');
 
   switch (languageCode) {
     case 'ko':
