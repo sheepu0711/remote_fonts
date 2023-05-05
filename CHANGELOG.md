@@ -1,3 +1,8 @@
+## 1.0.2
+
+- Minor bugfix for caching
+- Update README.md
+
 ## 1.0.1
 
 Breaking changes!

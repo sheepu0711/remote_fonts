@@ -3,6 +3,7 @@ library remote_fonts;
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
 
 import 'io_web_mock.dart' if (dart.library.io) 'io_mobile_desktop.dart';
@@ -27,7 +28,9 @@ class RemoteFontAsset {
         (cacheDirPath != null && sha256sum != null));
     FileCompat? localFile;
     if (cacheDirPath != null) {
-      localFile = FileCompat('${(await cacheDirPath)}/$sha256sum');
+      final localFilePath =
+          path.join(await cacheDirPath, '$sha256sum${path.extension(url)}');
+      localFile = FileCompat(localFilePath, sha256sum);
       final localBytes = await localFile.verifiedBytes();
       if (localBytes != null) {
         return ByteData.view(localBytes.buffer);
