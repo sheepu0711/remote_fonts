@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 
+/// {@nodoc}
 class FileCompat {
   final File _file;
   final String path;
@@ -9,7 +10,7 @@ class FileCompat {
 
   FileCompat(this.path, [this.sha256sum]) : _file = File(path);
 
-  Future<Uint8List?> verifiedBytes() async {
+  Future<Uint8List?> cachedBytes() async {
     if (!await _file.exists()) {
       return null;
     }

@@ -1,3 +1,8 @@
+## 1.0.4
+
+- Allow for parallel downloads when using multiple font families with `RemoteFonts`
+- Added dartdoc 🔥
+
 ## 1.0.3
 
 - Update README.md with better example 🚀
