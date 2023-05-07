@@ -23,7 +23,7 @@ class RemoteFontAsset {
   ///
   /// @param url The [url] of the remote font file.
   /// @param sha256sum The [sha256sum] of the remote font file.
-  const RemoteFontAsset(this.url, [this.sha256sum]);
+  const RemoteFontAsset(this.url, [this.sha256sum]) : assert(sha256sum != '');
 
   Uri get _uri => Uri.parse(url);
 
@@ -40,13 +40,16 @@ class RemoteFontAsset {
   ///
   /// @param cacheDirPath The path to the cache directory.
   /// @returns The font data as `Future<ByteData>`.
-  Future<ByteData> getFont([FutureOr<String>? cacheDirPath]) async {
-    assert((cacheDirPath == null && sha256sum == null) ||
-        (cacheDirPath != null && sha256sum != null));
+  Future<ByteData> getFont([FutureOr<String?>? cacheDirPath]) async {
+    final cachePath = await cacheDirPath;
+    if (cachePath != null && sha256sum == null) {
+      throw ArgumentError('When cacheDirPath is provided, sha256sum must be'
+          ' provided as well.');
+    }
     FileCompat? localFile;
-    if (cacheDirPath != null) {
+    if (cachePath != null) {
       final localFilePath =
-          path.join(await cacheDirPath, '$sha256sum${path.extension(url)}');
+          path.join(cachePath, '$sha256sum${path.extension(url)}');
       localFile = FileCompat(localFilePath, sha256sum);
       final localBytes = await localFile.cachedBytes();
       if (localBytes != null) {
@@ -78,7 +81,7 @@ class RemoteFont {
 
   /// The path to the cache directory. Optional.
   /// If [cacheDirPath] is not provided, the font files will **never** be cached.
-  final FutureOr<String>? cacheDirPath;
+  final FutureOr<String?>? cacheDirPath;
   bool _loaded = false;
 
   /// Creates a new [RemoteFont] with the given [family] name and [assets] list.
@@ -126,7 +129,7 @@ class RemoteFonts {
   final Iterable<RemoteFont> fonts;
 
   /// The path to the cache directory. Optional.
-  final FutureOr<String>? cacheDirPath;
+  final FutureOr<String?>? cacheDirPath;
 
   /// Creates a new [RemoteFonts] with the given [fonts] list.
   /// The [fonts] list contains the remote fonts.

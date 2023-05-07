@@ -1,3 +1,8 @@
+## 1.0.5
+
+Throws error when `cacheDirPath` is provided but `sha256sum` is not provided.
+For caching to work, both `cacheDirPath` and `sha256sum` must be provided.
+
 ## 1.0.4
 
 - Allow for parallel downloads when using multiple font families with `RemoteFonts`
