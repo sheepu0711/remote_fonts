@@ -1,3 +1,7 @@
+## 1.0.6
+
+Added some comments to README.md 🚀
+
 ## 1.0.5
 
 Throws error when `cacheDirPath` is provided but `sha256sum` is not provided.
