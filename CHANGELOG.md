@@ -1,3 +1,7 @@
+## 1.0.7
+
+Added support for  md5sum alongside existing sha256sum 🔥
+
 ## 1.0.6
 
 Added some comments to README.md 🚀

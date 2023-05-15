@@ -3,9 +3,9 @@ import 'dart:typed_data';
 /// {@nodoc}
 class FileCompat {
   final String path;
-  final String? sha256sum;
+  final String? checksum;
 
-  FileCompat(this.path, [this.sha256sum]);
+  FileCompat(this.path, [this.checksum]);
 
   Future<Uint8List?> cachedBytes() => Future.value(null);
 

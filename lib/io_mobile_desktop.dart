@@ -6,18 +6,19 @@ import 'package:crypto/crypto.dart';
 class FileCompat {
   final File _file;
   final String path;
-  final String? sha256sum;
+  final String? checksum;
 
-  FileCompat(this.path, [this.sha256sum]) : _file = File(path);
+  FileCompat(this.path, [this.checksum]) : _file = File(path);
 
   Future<Uint8List?> cachedBytes() async {
-    if (!await _file.exists()) {
-      return null;
-    }
+    if (checksum == null || !await _file.exists()) return null;
+
     final fontBytes = await _file.readAsBytes();
-    if (sha256sum != sha256.convert(fontBytes).toString()) {
-      return null;
-    }
+
+    final computedChecksum =
+        (checksum!.length == 64 ? sha256 : md5).convert(fontBytes).toString();
+    if (checksum != computedChecksum) return null;
+
     return fontBytes;
   }
 

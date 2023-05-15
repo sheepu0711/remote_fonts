@@ -25,13 +25,13 @@ RemoteFont _notoSansFont(Future<String> cacheDirPath) {
         'https://example.com/fonts/NotoSans/NotoSans-Regular.ttf',
 
         // Optional but required for caching to work
-        'e6d03ebde2bb9c3cb5e9a932f394521233c39c42d57914f699193a9d9d2b546b', // sha256sum of font file
+        'b9ba72dfa580114ddb2ccf06f93b31b1', // md5sum (or sha256sum) of font file
       ),
       const RemoteFontAsset(
         'https://example.com/fonts/NotoSans/NotoSans-Bold.ttf',
 
         // Optional but required for caching to work
-        '5dd7fc028a59d98f1c87e58b70cc94077633ca0c33d2522c08985fee26334ee6', // sha256sum of font file
+        '5dd7fc028a59d98f1c87e58b70cc94077633ca0c33d2522c08985fee26334ee6', // sha256sum (or md5sum) of font file
       ),
     ],
   );
