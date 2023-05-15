@@ -25,13 +25,15 @@ RemoteFont _notoSansFont(Future<String> cacheDirPath) {
         'https://example.com/fonts/NotoSans/NotoSans-Regular.ttf',
 
         // Optional but required for caching to work
-        'b9ba72dfa580114ddb2ccf06f93b31b1', // md5sum (or sha256sum) of font file
+        // md5sum (or sha256sum) of font file
+        'b9ba72dfa580114ddb2ccf06f93b31b1',
       ),
       const RemoteFontAsset(
         'https://example.com/fonts/NotoSans/NotoSans-Bold.ttf',
 
         // Optional but required for caching to work
-        '5dd7fc028a59d98f1c87e58b70cc94077633ca0c33d2522c08985fee26334ee6', // sha256sum (or md5sum) of font file
+        // sha256sum (or md5sum) of font file
+        '5dd7fc028a59d98f1c87e58b70cc94077633ca0c33d2522c08985fee26334ee6',
       ),
     ],
   );
@@ -46,7 +48,8 @@ class NiceText extends StatelessWidget {
       (tempDir) => path.join(tempDir.path, 'font_cache'),
     );
     final font = _notoSansFont(cacheDirPath);
-    font.load(); // No need to await the Future, fonts are automatically loaded to flutter engine
+    RemoteFontsLoader.load([font]); // No need to await the Future, fonts are
+                                    // automatically loaded to flutter engine
 
     return Text(
       'Some nice text',

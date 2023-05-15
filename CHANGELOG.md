@@ -1,3 +1,10 @@
+## 1.1.0
+
+BREAKING CHANGES:
+- Removed `RemoteFonts` class
+- Made `RemoteFont` class a const class
+- Added `RemoteFontsLoader` class to load a list of `RemoteFont`s
+
 ## 1.0.7
 
 Added support for  md5sum alongside existing sha256sum 🔥

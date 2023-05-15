@@ -1,6 +1,7 @@
 library remote_fonts;
 
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
@@ -86,7 +87,6 @@ class RemoteFont {
   /// The path to the cache directory. Optional.
   /// If [cacheDirPath] is not provided, the font files will **never** be cached.
   final FutureOr<String?>? cacheDirPath;
-  bool _loaded = false;
 
   /// Creates a new [RemoteFont] with the given [family] name and [assets] list.
   /// The [assets] list contains the font files for the given [family] name.
@@ -100,64 +100,51 @@ class RemoteFont {
   /// @param family The family name of the remote font.
   /// @param assets The list of remote font assets.
   /// @param cacheDirPath The path to the cache directory. Optional.
-  RemoteFont({required this.family, required this.assets, this.cacheDirPath});
+  const RemoteFont({
+    required this.family,
+    required this.assets,
+    this.cacheDirPath,
+  });
 
   /// Returns the font data as `Iterable<Future<ByteData>>`.
   Iterable<Future<ByteData>> loadableFonts() {
     return assets.map((asset) => asset.getFont(cacheDirPath));
   }
+}
 
-  /// Loads the font data.
-  Future<void> load() async {
-    if (_loaded) {
-      return;
+/// Loader class for the given [RemoteFont]s.
+/// The [RemoteFont]s will be cached if [cacheDirPath] and [checksum] is
+/// provided for the [RemoteFont] and [RemoteFontAsset]s respectively.
+abstract class RemoteFontsLoader {
+  static final List<String> _loadedFonts = [];
+
+  /// Loads the given [fonts] list.
+  /// If [parallel] is true, the [fonts] will be loaded in parallel.
+  /// Otherwise, the [fonts] will be loaded sequentially.
+  Future<void> load(Iterable<RemoteFont> fonts, [bool parallel = false]) async {
+    if (parallel) {
+      await Future.wait(fonts.map((font) => _loadFont(font)));
+    } else {
+      for (final font in fonts) {
+        await _loadFont(font);
+      }
     }
-    _loaded = true;
+  }
 
-    final fontLoader = FontLoader(family);
-    for (final fontData in loadableFonts()) {
+  Future<void> _loadFont(RemoteFont font) async {
+    if (_loadedFonts.contains(font.family)) {
+      return log(
+        'WARNING: Font ${font.family} is already loaded.',
+        name: 'RemoteFontsLoader',
+        level: 900,
+      );
+    }
+    _loadedFonts.add(font.family);
+    final assets = font.loadableFonts();
+    final fontLoader = FontLoader(font.family);
+    for (final fontData in assets) {
       fontLoader.addFont(fontData);
     }
     await fontLoader.load();
-  }
-}
-
-/// Describes the remote fonts with the given [fonts] list.
-/// The [fonts] list contains the remote fonts.
-/// The [cacheDirPath] is optional and will be used to cache the font files.
-/// If [cacheDirPath] is not provided, the font files will **never** be cached.
-/// The [cacheDirPath] can be provided for example by the
-/// [path_provider](https://pub.dev/packages/path_provider) package.
-class RemoteFonts {
-  /// The list of remote fonts.
-  final Iterable<RemoteFont> fonts;
-
-  /// The path to the cache directory. Optional.
-  final FutureOr<String?>? cacheDirPath;
-
-  /// Creates a new [RemoteFonts] with the given [fonts] list.
-  /// The [fonts] list contains the remote fonts.
-  /// The [cacheDirPath] is optional and will be used to cache the font files.
-  /// If [cacheDirPath] is not provided, the font files will **never** be cached.
-  /// The [cacheDirPath] can be provided for example by the
-  /// [path_provider](https://pub.dev/packages/path_provider) package.
-  ///
-  /// @param fonts The list of remote fonts.
-  /// @param cacheDirPath The path to the cache directory. Optional.
-  const RemoteFonts({required this.fonts, this.cacheDirPath});
-
-  Future<void> _loadParallel() async {
-    await Future.wait(fonts.map((font) => font.load()));
-  }
-
-  /// Load the fonts. If [parallel] is `true`, the fonts will be loaded
-  /// in parallel. Otherwise the fonts will be loaded sequentially.
-  Future<void> load([bool? parallel]) async {
-    if (parallel == true) {
-      return await _loadParallel();
-    }
-    for (final font in fonts) {
-      await font.load();
-    }
   }
 }
