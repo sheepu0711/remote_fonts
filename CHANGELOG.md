@@ -1,3 +1,7 @@
+## 1.1.2
+
+Added cool example of usage 😎
+
 ## 1.1.1
 
 Important hotfix for v1.1.0 🐞
