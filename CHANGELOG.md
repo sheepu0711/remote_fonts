@@ -1,3 +1,7 @@
+## 1.1.1
+
+Important hotfix for v1.1.0 🐞
+
 ## 1.1.0
 
 BREAKING CHANGES:

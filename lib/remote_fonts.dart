@@ -121,7 +121,8 @@ abstract class RemoteFontsLoader {
   /// Loads the given [fonts] list.
   /// If [parallel] is true, the [fonts] will be loaded in parallel.
   /// Otherwise, the [fonts] will be loaded sequentially.
-  Future<void> load(Iterable<RemoteFont> fonts, [bool parallel = false]) async {
+  static Future<void> load(Iterable<RemoteFont> fonts,
+      [bool parallel = false]) async {
     if (parallel) {
       await Future.wait(fonts.map((font) => _loadFont(font)));
     } else {
@@ -131,7 +132,7 @@ abstract class RemoteFontsLoader {
     }
   }
 
-  Future<void> _loadFont(RemoteFont font) async {
+  static Future<void> _loadFont(RemoteFont font) async {
     if (_loadedFonts.contains(font.family)) {
       return log(
         'WARNING: Font ${font.family} is already loaded.',
