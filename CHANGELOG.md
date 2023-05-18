@@ -1,3 +1,7 @@
+## 1.1.3
+
+Added nice screenshot of our example 🚀
+
 ## 1.1.2
 
 Added cool example of usage 😎

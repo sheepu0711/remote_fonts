@@ -8,6 +8,10 @@ Fetch and load remote fonts during Flutter app runtime 💘 Also has ability to 
 flutter pub add remote_fonts
 ```
 
+## Screenshot
+
+<img src="example/screenshot.png" alt="Example screenshot" style="height: 550px" />
+
 ## Usage
 
 ```dart
