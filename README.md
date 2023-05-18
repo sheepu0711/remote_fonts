@@ -10,7 +10,7 @@ flutter pub add remote_fonts
 
 ## Screenshot
 
-<img src="example/screenshot.png" alt="Example screenshot" style="height: 550px" />
+<img src="https://raw.githubusercontent.com/giriss/remote_fonts/53a25aee0834751873b673ad2e80bfb33d30c60d/example/screenshot.png" alt="Example screenshot" style="height: 550px" />
 
 ## Usage
 

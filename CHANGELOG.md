@@ -1,3 +1,7 @@
+## 1.1.4
+
+Url-fix 😅
+
 ## 1.1.3
 
 Added nice screenshot of our example 🚀

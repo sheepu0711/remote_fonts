@@ -1,6 +1,6 @@
 name: remote_fonts
 description: Fetch and load remote fonts during Flutter app runtime. Also has ability to cache previously loaded fonts.
-version: 1.1.3
+version: 1.1.4
 repository: https://github.com/giriss/remote_fonts.git
 
 environment:
