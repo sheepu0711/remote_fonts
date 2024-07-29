@@ -4,14 +4,14 @@ version: 1.1.4
 repository: https://github.com/giriss/remote_fonts.git
 
 environment:
-  sdk: '>=2.19.6 <4.0.0'
+  sdk: ">=2.19.6 <4.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
   crypto: ^3.0.2
   flutter:
     sdk: flutter
-  http: ^0.13.6
+  http: ^1.0.0
   path: ^1.8.2
 
 dev_dependencies:
